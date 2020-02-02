@@ -2,6 +2,8 @@
 Software for group 19 ME3 DMT project
 This project is to develop a low-cost, 3D printable MMG prosthetic hand,
 ATLAS
+
+02.02.20
 */
 
 
@@ -9,7 +11,11 @@ ATLAS
 //include statements and boilerplate code
 
 #include <Arduino.h>
+#include "config.h"
 #include "BandPassFilter.h"
+#include "signal_acquisition.h"
+#include "signal_classification.h"
+#include "signal_processing.h"
 
 /******************************************************************************/
 // Define Global variables here
