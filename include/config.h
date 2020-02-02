@@ -4,3 +4,24 @@ All functions in this project use these names, so, if we want to wire the
 board differently, we only need to change this file
 */
 
+#ifdef	__cplusplus
+extern "C" {
+#endif
+
+#ifndef config_H
+#define	config_H
+
+// Sensors are connected to analogue inputs 0 and 1
+#define bicepSensor A0
+#define tricepSensor A1
+
+// motors for each finger connected to pins 10,11,12
+#define thumb 10
+#define index_finger 11
+#define second_finger 12
+
+#ifdef	__cplusplus
+}
+#endif
+
+#endif	

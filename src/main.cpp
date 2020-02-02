@@ -29,6 +29,7 @@ ATLAS
 // setup function, runs once when device is booted
 
 void setup() {
+  init_motor();
   
 
 }
