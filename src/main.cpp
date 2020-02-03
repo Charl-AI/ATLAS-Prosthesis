@@ -16,6 +16,7 @@ ATLAS
 #include "signal_acquisition.h"
 #include "signal_classification.h"
 #include "signal_processing.h"
+#include "actuation.h"
 
 /******************************************************************************/
 // Define Global variables here
@@ -29,6 +30,8 @@ ATLAS
 // setup function, runs once when device is booted
 
 void setup() {
+
+  
   init_motor();
   
 

@@ -7,6 +7,7 @@ are connected to
  */
 #include <Arduino.h>
 #include "config.h"
+#include "actuation.h"
 
 // Here we initialise the output pins for the motors
 void init_motor(void)
@@ -65,7 +66,7 @@ void select_pose(int pose)
     if (pose == 2)
     {
         close_finger(thumb);
-        open_finger(index_finger);
+        extend_finger(index_finger);
         close_finger(second_finger);
     }
 }
