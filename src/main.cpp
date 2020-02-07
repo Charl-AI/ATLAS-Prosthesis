@@ -19,6 +19,9 @@ ATLAS
 
 /******************************************************************************/
 // Define Global variables here
+const int SAMPLES = 50;
+short bicepRaw[SAMPLES];
+short tricepRaw[SAMPLES];
 
 /******************************************************************************/
 // interrupt service routines
@@ -37,6 +40,8 @@ void setup()
 
 void loop()
 {
+  processSignal(bicepRaw, SAMPLES);
+  processSignal(tricepRaw, SAMPLES);
 }
 
 /******************************************************************************/

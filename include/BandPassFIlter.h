@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 // Begin header file, BandPassFilter.h
 
-#ifndef BANDPASSFILTER_H_ // Include guards
-#define BANDPASSFILTER_H_
+#ifndef BANDPASSFiLTER_H_ // Include guards
+#define BANDPASSFiLTER_H_
 
 static const int BandPassFilter_numStages = 4;
 static const int BandPassFilter_coefficientLength = 20;
@@ -37,26 +37,24 @@ typedef struct
 	short count;
 } BandPassFilter_executionState;
 
+BandPassFilterType *BandPassFilter_create(void);
+void BandPassFilter_destroy(BandPassFilterType *pObject);
+void BandPassFilter_init(BandPassFilterType *pThis);
+void BandPassFilter_reset(BandPassFilterType *pThis);
+#define BandPassFilter_writeInput(pThis, input) \
+	BandPassFilter_filterBlock(pThis, &(input), &(pThis)->output, 1);
 
-BandPassFilterType *BandPassFilter_create( void );
-void BandPassFilter_destroy( BandPassFilterType *pObject );
- void BandPassFilter_init( BandPassFilterType * pThis );
- void BandPassFilter_reset( BandPassFilterType * pThis );
-#define BandPassFilter_writeInput( pThis, input )  \
-	BandPassFilter_filterBlock( pThis, &(input), &(pThis)->output, 1 );
-
-#define BandPassFilter_readOutput( pThis )  \
+#define BandPassFilter_readOutput(pThis) \
 	(pThis)->output
 
- int BandPassFilter_filterBlock( BandPassFilterType * pThis, short * pInput, short * pOutput, unsigned int count );
-#define BandPassFilter_outputToFloat( output )  \
-	(( (1.0f/4096) * (output) ))
+int BandPassFilter_filterBlock(BandPassFilterType *pThis, short *pInput, short *pOutput, unsigned int count);
+#define BandPassFilter_outputToFloat(output) \
+	(((1.0f / 4096) * (output)))
 
-#define BandPassFilter_inputFromFloat( input )  \
+#define BandPassFilter_inputFromFloat(input) \
 	((short)(32768f * (input)))
 
- void BandPassFilter_filterBiquad_11_14_15( BandPassFilter_executionState * pExecState );
- void BandPassFilter_filterBiquad_12_14_15( BandPassFilter_executionState * pExecState );
- void BandPassFilter_filterBiquad_15_14_15( BandPassFilter_executionState * pExecState );
+void BandPassFilter_filterBiquad_11_14_15(BandPassFilter_executionState *pExecState);
+void BandPassFilter_filterBiquad_12_14_15(BandPassFilter_executionState *pExecState);
+void BandPassFilter_filterBiquad_15_14_15(BandPassFilter_executionState *pExecState);
 #endif // BANDPASSFILTER_H_
-	
