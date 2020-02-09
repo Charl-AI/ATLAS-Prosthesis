@@ -21,7 +21,7 @@ int processSignal(short rawData[], int length)
     {
         BandPassFilter_writeInput(BandPassFilter, rawData[i]);
         int filtered = BandPassFilter_readOutput(BandPassFilter);
-        RMS += filtered * filtered;
+        RMS += (filtered * filtered);
     }
 
     BandPassFilter_destroy(BandPassFilter); // destroy the filter
