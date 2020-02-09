@@ -20,9 +20,12 @@ ATLAS
 /******************************************************************************/
 // Define Global variables here
 const int SAMPLES = 50;
+const int THRESHOLD = 100;
 short bicepRaw[SAMPLES];
 short tricepRaw[SAMPLES];
 
+int bicepState = 0;
+int tricepState = 0;
 /******************************************************************************/
 // interrupt service routines
 
@@ -40,8 +43,14 @@ void setup()
 
 void loop()
 {
-  processSignal(bicepRaw, SAMPLES);
-  processSignal(tricepRaw, SAMPLES);
+  int bicepProcessed = processSignal(bicepRaw, SAMPLES);
+  int tricepProcessed = processSignal(tricepRaw, SAMPLES);
+
+  bicepState = muscleStatus(bicepProcessed, bicepState, THRESHOLD);
+  tricepState = muscleStatus(tricepProcessed, tricepState, THRESHOLD);
+  int pose = classifySignal(pose, bicepProcessed, tricepProcessed);
+
+  select_pose(pose);
 }
 
 /******************************************************************************/

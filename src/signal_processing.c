@@ -29,3 +29,12 @@ int processSignal(short rawData[], int length)
     RMS /= length;
     return (sqrt(RMS));
 }
+
+/*
+If the filter is giving strange values, try changing the loop to:
+
+for(int i = 0; i < length; ++i ){
+    BandPassFilter_writeInput(BandPassFilter, rawData[(position + i) % length])
+}
+
+ */

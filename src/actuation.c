@@ -43,7 +43,8 @@ void close_finger(int finger)
     }
 }
 
-// this function takes
+// this function takes the pose input and makes the hand make that pose
+// 0 is the open pose, 1 is the closed pose and 2 is the point pose
 void select_pose(int pose)
 {
     // pose 0 represents the open pose
