@@ -39,28 +39,6 @@ int tricepState = 0;
 int pose = 0;
 /******************************************************************************/
 // Interrupt Service Routine (ISR) for timer TC4
-// This triggers every 0.5 ms and will cause the ADC to read from a sensor,
-// the sensor being read will alternate each time
-void TC4_Handler()
-{
-  // Check for overflow (OVF) interrupt
-  if (TC4->COUNT16.INTFLAG.bit.OVF && TC4->COUNT16.INTENSET.bit.OVF)
-  {
-    if (sensor == bicepSensor)
-    {
-      acquire_signal(bicepSensor, bicepRaw, SAMPLES, position);
-      sensor = tricepSensor;
-    }
-    if (sensor == tricepSensor)
-    {
-      acquire_signal(tricepSensor, tricepRaw, SAMPLES, position);
-      sensor = bicepSensor;
-      position += 1;
-    }
-
-    REG_TC4_INTFLAG = TC_INTFLAG_OVF; // Clear the OVF interrupt flag
-  }
-}
 
 /******************************************************************************/
 // setup function, runs once when device is booted
