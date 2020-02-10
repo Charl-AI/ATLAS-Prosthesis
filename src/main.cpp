@@ -39,14 +39,18 @@ int tricepState = 0;
 int pose = 0;
 /******************************************************************************/
 // Interrupt Service Routine (ISR) for timer TC4
-
+void ADC_Handler()
+{
+  bicepRaw[position % SAMPLES] = REG_ADC_RESULT;
+  position++;
+  ADC->INTFLAG.reg = ADC_INTENSET_RESRDY; //Need to reset interrupt
+}
 /******************************************************************************/
 // setup function, runs once when device is booted
 
 void setup()
 {
-
-  init_timer();
+  init_ADC();
   init_motor();
 }
 

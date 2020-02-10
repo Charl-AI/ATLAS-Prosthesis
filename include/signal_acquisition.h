@@ -11,7 +11,7 @@ extern "C" {
 #define signal_acquisition_H
 
 // define function prototypes
-void init_timer(void);
+void init_ADC(void);
 void acquire_signal(int sensor, short rawData[], int length, int position);
 
 #ifdef __cplusplus
