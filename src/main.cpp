@@ -52,21 +52,36 @@ void setup()
 {
   init_ADC();
   init_motor();
+  Serial.begin(115200);
 }
 
 /******************************************************************************/
 // main loop of the program
-
+void print_to_plotter(int data)
+{
+  Serial.print(0); // To freeze the lower limit
+  Serial.print(" ");
+  Serial.print(70); // To freeze the upper limit
+  Serial.print(" ");
+  //Serial.print(threshold); // To mark the threshold voltage
+  Serial.print(" ");
+  Serial.println(data);
+}
 void loop()
 {
-  int bicepProcessed = processSignal(bicepRaw, SAMPLES);
-  int tricepProcessed = processSignal(tricepRaw, SAMPLES);
 
+  int bicepProcessed = processSignal(bicepRaw, SAMPLES, position);
+  //int tricepProcessed = processSignal(tricepRaw, SAMPLES);
+
+  /*
   bicepState = muscleStatus(bicepProcessed, bicepState, THRESHOLD);
   tricepState = muscleStatus(tricepProcessed, tricepState, THRESHOLD);
   pose = classifySignal(pose, bicepState, tricepState);
+*/
+  //select_pose(pose);
 
-  select_pose(pose);
+  print_to_plotter(bicepProcessed);
+  //print_to_plotter(bicepRaw[position % SAMPLES]);
 }
 
 /******************************************************************************/

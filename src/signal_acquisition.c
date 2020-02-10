@@ -27,12 +27,13 @@ void init_ADC(void)
     REG_PM_APBCMASK |= PM_APBCMASK_ADC;
 
     //This allows you to setup a div factor for the selected clock certain clocks allow certain division factors: Generic clock generators 3 - 8 8 division factor bits - DIV[7:0]
-    GCLK->GENDIV.reg |= GCLK_GENDIV_ID(3) | GCLK_GENDIV_DIV(1);
+    GCLK->GENDIV.reg |= GCLK_GENDIV_ID(3) | GCLK_GENDIV_DIV(7);
     while (GCLK->STATUS.reg & GCLK_STATUS_SYNCBUSY)
         ;
 
     //configure the generator of the generic clock with 48MHz clock
-    GCLK->GENCTRL.reg |= GCLK_GENCTRL_GENEN | GCLK_GENCTRL_SRC_DFLL48M | GCLK_GENCTRL_ID(3); // GCLK_GENCTRL_DIVSEL don't need this, it makes divide based on power of two
+    GCLK->GENCTRL.reg |= GCLK_GENCTRL_GENEN | GCLK_GENCTRL_SRC_DFLL48M | GCLK_GENCTRL_ID(3)| GCLK_GENCTRL_DIVSEL; // don't need this, it makes divide based on power of two
+
     while (GCLK->STATUS.reg & GCLK_STATUS_SYNCBUSY)
         ;
 
@@ -56,7 +57,7 @@ void init_ADC(void)
     while (REG_ADC_STATUS & ADC_STATUS_SYNCBUSY)
         ;
 
-    ADC->CTRLB.reg |= ADC_CTRLB_RESSEL_8BIT | ADC_CTRLB_PRESCALER_DIV32 | ADC_CTRLB_FREERUN; //This is where you set the divide factor, note that the divide call has no effect until you change Arduino wire.c
+    ADC->CTRLB.reg |= ADC_CTRLB_RESSEL_8BIT | ADC_CTRLB_PRESCALER_DIV128 | ADC_CTRLB_FREERUN; //This is where you set the divide factor, note that the divide call has no effect until you change Arduino wire.c
     //Wait for synchronization
     while (REG_ADC_STATUS & ADC_STATUS_SYNCBUSY)
         ;

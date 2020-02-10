@@ -9,18 +9,18 @@ from the MMG sensors
 #include "signal_processing.h"
 #include "BandPassFilter.h"
 
-int processSignal(short rawData[], int length)
+int processSignal(short rawData[], int length, int location)
 {
     // create filter and variable to store RMS
     BandPassFilterType *BandPassFilter = BandPassFilter_create();
     long RMS = 0;
-
+    int filtered;
     // iterate through raw data, filtering each value and adding the
     // filtered value's square to the running RMS
     for (int i = 0; i < length; ++i)
     {
-        BandPassFilter_writeInput(BandPassFilter, rawData[i]);
-        int filtered = BandPassFilter_readOutput(BandPassFilter);
+        BandPassFilter_writeInput(BandPassFilter, rawData[(location + i + 1) % length]);
+        filtered = BandPassFilter_readOutput(BandPassFilter);
         RMS += (filtered * filtered);
     }
 

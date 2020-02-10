@@ -12,7 +12,7 @@ extern "C" {
 #ifndef signal_processing_H
 #define signal_processing_H
 
-int processSignal(short rawData[], int length);
+int processSignal(short rawData[], int length, int location);
 
 #ifdef __cplusplus
 }
