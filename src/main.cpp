@@ -14,7 +14,7 @@ ATLAS
 #include "BandPassFilter.h"
 #include "signal_acquisition.h"
 #include "signal_classification.h"
-#include "signal_processing.h"
+//#include "signal_processing.h"
 #include "actuation.h"
 
 /******************************************************************************/
@@ -37,21 +37,18 @@ int sensor = bicepSensor;
 int bicepState = 0;
 int tricepState = 0;
 int pose = 0;
+
+extern BandPassFilterType BandPassFilter;
 /******************************************************************************/
-// Interrupt Service Routine (ISR) for timer TC4
-void ADC_Handler()
-{
-  bicepRaw[position % SAMPLES] = REG_ADC_RESULT;
-  position++;
-  ADC->INTFLAG.reg = ADC_INTENSET_RESRDY; //Need to reset interrupt
-}
+
 /******************************************************************************/
 // setup function, runs once when device is booted
 
-void setup()
+void mysetup()
 {
-  init_ADC();
+  //init_ADC();
   init_motor();
+
   Serial.begin(115200);
 }
 
@@ -67,21 +64,32 @@ void print_to_plotter(int data)
   Serial.print(" ");
   Serial.println(data);
 }
-void loop()
+int main()
 {
+  init();
+  mysetup();
+  BandPassFilter_init(&BandPassFilter);
 
-  int bicepProcessed = processSignal(bicepRaw, SAMPLES, position);
-  //int tricepProcessed = processSignal(tricepRaw, SAMPLES);
+  while (1)
+  {
+    bicepRaw[position % SAMPLES] = analogRead(A0);
+    position++;
+    BandPassFilter_writeInput(&BandPassFilter, bicepRaw[position % SAMPLES]);
+    int filtered = BandPassFilter_readOutput(&BandPassFilter);
 
-  /*
+    //int bicepProcessed = processSignal(bicepRaw, SAMPLES, position);
+    //int tricepProcessed = processSignal(tricepRaw, SAMPLES);
+
+    /*
   bicepState = muscleStatus(bicepProcessed, bicepState, THRESHOLD);
   tricepState = muscleStatus(tricepProcessed, tricepState, THRESHOLD);
   pose = classifySignal(pose, bicepState, tricepState);
 */
-  //select_pose(pose);
+    //select_pose(pose);
 
-  print_to_plotter(bicepProcessed);
-  //print_to_plotter(bicepRaw[position % SAMPLES]);
+    print_to_plotter(filtered);
+    //print_to_plotter(bicepRaw[position % SAMPLES]);
+  }
 }
 
 /******************************************************************************/

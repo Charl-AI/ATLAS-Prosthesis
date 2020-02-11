@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 // Begin header file, BandPassFilter.h
 
-#ifndef BANDPASSFiLTER_H_ // Include guards
-#define BANDPASSFiLTER_H_
+#ifndef BANDPASSFILTER_H_ // Include guards
+#define BANDPASSFILTER_H_
 
 static const int BandPassFilter_numStages = 4;
 static const int BandPassFilter_coefficientLength = 20;

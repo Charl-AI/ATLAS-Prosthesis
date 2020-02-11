@@ -27,7 +27,8 @@ int processSignal(short rawData[], int length, int location)
     BandPassFilter_destroy(BandPassFilter); // destroy the filter
 
     RMS /= length;
-    return (sqrt(RMS));
+    return filtered;
+    //return (sqrt(RMS));
 }
 
 /*
