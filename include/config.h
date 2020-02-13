@@ -12,8 +12,8 @@ extern "C" {
 #define config_H
 
 // Sensors are connected to analogue inputs 0 and 1
-#define bicepSensor 0
-#define tricepSensor 1
+#define bicepSensor A0
+#define tricepSensor A1
 
 // motors for each finger connected to pins 10,11,12
 #define thumb 10
