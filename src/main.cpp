@@ -5,7 +5,6 @@ ATLAS
 
 02.02.20
 */
-
 /******************************************************************************/
 //include statements and boilerplate code
 
@@ -15,17 +14,16 @@ ATLAS
 #include "signal_classification.h"
 #include "actuation.h"
 #include "filters.h"
-
 /******************************************************************************/
 // Define Global variables here
 
 // These are the parameters to be tuned for performance
-const int SAMPLES = 50;
+const int SAMPLES = 100;
 const int THRESHOLD = 100;
 
 // Here we declare the global arrays to store the raw signals
-short bicepRaw[SAMPLES];
-short tricepRaw[SAMPLES];
+short bicepFiltered[SAMPLES];
+short tricepFiltered[SAMPLES];
 
 const float low_cutoff_freq = 100.0; //high cutoff frequency in Hz
 const float high_cutoff_freq = 5;    // low cutoff frequency in Hz
@@ -84,34 +82,34 @@ int main()
 
   while (1)
   {
-    // collect new data and store the oldest data
-    int oldBicep = bicepRaw[position % SAMPLES];
-    int newBicep = analogRead(bicepSensor);
-    // replace the oldest value with the newest
-    bicepRaw[position % SAMPLES] = newBicep;
-    // filter the bicep data
-    float bicepLP = bicepLowPass.filterIn(newBicep);
-    float bicepFiltered = bicepHighPass.filterIn(bicepLP);
+    // collect and filter the raw bicep data
+    float bicepLP = bicepLowPass.filterIn(analogRead(bicepSensor));
+    float newBicepFiltered = bicepHighPass.filterIn(bicepLP);
+
+    // store old data temporarily and replace it with new data
+    short oldBicepFiltered = bicepFiltered[position % SAMPLES];
+    bicepFiltered[position % SAMPLES] = newBicepFiltered;
+
     // find the RMS of the filtered data
-    bicep_sum_squares -= oldBicep * oldBicep;
-    bicep_sum_squares += newBicep * newBicep;
+    bicep_sum_squares -= oldBicepFiltered * oldBicepFiltered;
+    bicep_sum_squares += newBicepFiltered * newBicepFiltered;
     int bicepRMS = sqrt(bicep_sum_squares / SAMPLES);
     // determine the state of the muscle
     bicepState = muscleStatus(bicepRMS, bicepState, THRESHOLD);
 
     /*
-    // collect new data and store the oldest data
-    int oldTricep = tricepRaw[position % SAMPLES];
-    int newTricep = analogRead(tricepSensor);
-    // replace the oldest value with the newest
-    tricepRaw[position % SAMPLES] = newTricep;
-    // filter the bicep data
-    float tricepLP = bicepLowPass.filterIn(newTricep);
-    float tricepFiltered = bicepHighPass.filterIn(tricepLP);
+    // collect and filter the raw tricep data
+    float tricepLP = tricepLowPass.filterIn(analogRead(tricepSensor));
+    float newTricepFiltered = tricepHighPass.filterIn(tricepLP);
+
+    // store old data temporarily and replace it with new data
+    short oldTricepFiltered = tricepFiltered[position % SAMPLES];
+    tricepFiltered[position % SAMPLES] = newTricepFiltered;
+
     // find the RMS of the filtered data
-    tricep_sum_squares -= oldTricep*oldTricep;
-    tricep_sum_squares += newTricep*newTricep;
-    int tricepRMS = sqrt(tricep_sum_squares/SAMPLES);
+    tricep_sum_squares -= oldTricepFiltered * oldTricepFiltered;
+    tricep_sum_squares += newTricepFiltered * newTricepFiltered;
+    int tricepRMS = sqrt(tricep_sum_squares / SAMPLES);
     // determine the state of the muscle
     tricepState = muscleStatus(tricepRMS, tricepState, THRESHOLD);
 */
@@ -123,13 +121,14 @@ int main()
     // determine the new pose
     pose = classifySignal(oldPose, bicepState, tricepState);
 
+    /*
     // actuate if necessary
     if (pose != oldPose)
     {
       select_pose(pose);
     }
-
-    //print_to_plotter(filtered);
+*/
+    print_to_plotter(bicepRMS);
     //print_to_plotter(bicepRaw[position % SAMPLES]);
   }
 }
