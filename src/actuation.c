@@ -53,6 +53,10 @@ void select_pose(int pose)
         extend_finger(thumb);
         extend_finger(index_finger);
         extend_finger(second_finger);
+
+        digitalWrite(17, HIGH);
+        digitalWrite(18, LOW);
+        digitalWrite(19, LOW);
     }
 
     // pose 1 represents the closed pose
@@ -61,6 +65,10 @@ void select_pose(int pose)
         close_finger(thumb);
         close_finger(index_finger);
         close_finger(second_finger);
+
+        digitalWrite(17, LOW);
+        digitalWrite(18, HIGH);
+        digitalWrite(19, LOW);
     }
 
     // pose 2 represents the point pose
@@ -69,5 +77,9 @@ void select_pose(int pose)
         close_finger(thumb);
         extend_finger(index_finger);
         close_finger(second_finger);
+
+        digitalWrite(17, LOW);
+        digitalWrite(18, LOW);
+        digitalWrite(19, HIGH);
     }
 }

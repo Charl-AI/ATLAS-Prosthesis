@@ -11,15 +11,8 @@ extern "C" {
 #ifndef config_H
 #define config_H
 
-// Sensors are connected to analogue inputs 0 and 1
-#define bicepSensor A0
-#define tricepSensor A1
-#define potentiometer A2
-
-// motors for each finger connected to pins 10,11,12
-#define thumb 10
-#define index_finger 11
-#define second_finger 12
+void init_debug(void);
+void print_to_plotter(int bicep, int tricep, int threshold);
 
 #ifdef __cplusplus
 }

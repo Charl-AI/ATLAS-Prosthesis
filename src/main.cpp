@@ -5,52 +5,125 @@ ATLAS
 
 02.02.20
 */
-
 /******************************************************************************/
 //include statements and boilerplate code
 
 #include <Arduino.h>
 #include "config.h"
-#include "BandPassFilter.h"
-#include "signal_acquisition.h"
-#include "signal_classification.h"
-#include "signal_processing.h"
-#include "actuation.h"
 
+#include "signal_classification.h"
+#include "actuation.h"
+#include "filters.h"
+#include "debugging.h"
 /******************************************************************************/
 // Define Global variables here
-const int SAMPLES = 50;
-const int THRESHOLD = 100;
-short bicepRaw[SAMPLES];
-short tricepRaw[SAMPLES];
 
+// This is the number of samples averaged over, tune this for performance
+const int SAMPLES = 500;
+
+// This is the current position we are at in the raw array
+int position = 0;
+
+// Here we store the current pose and state of each muscle
 int bicepState = 0;
 int tricepState = 0;
+int pose = 0;
+
+// here we store the sum of the squares for processing
+long bicep_sum_squares = 0;
+long tricep_sum_squares = 0;
+
+// Here we declare the global arrays to store the raw signals
+short bicepFiltered[SAMPLES];
+short tricepFiltered[SAMPLES];
+
+// Parameters for the filters
+const float low_cutoff_freq = 100.0; //high cutoff frequency in Hz
+const float high_cutoff_freq = 5;    // low cutoff frequency in Hz
+const float sampling_time = 0.001;   //Sampling time in seconds.
+IIR::ORDER order = IIR::ORDER::OD4;  // 4th order filter
+
+// Filters for Bicep measurements
+Filter bicepLowPass(low_cutoff_freq, sampling_time, order);
+Filter bicepHighPass(high_cutoff_freq, sampling_time, order, IIR::TYPE::HIGHPASS);
+
+// Filters for Tricep measurements
+Filter tricepLowPass(low_cutoff_freq, sampling_time, order);
+Filter tricepHighPass(high_cutoff_freq, sampling_time, order, IIR::TYPE::HIGHPASS);
+
 /******************************************************************************/
-// interrupt service routines
 
 /******************************************************************************/
 // setup function, runs once when device is booted
-
 void setup()
 {
+  Serial.begin(115200);
 
   init_motor();
+  init_debug();
 }
 
 /******************************************************************************/
 // main loop of the program
-
 void loop()
 {
-  int bicepProcessed = processSignal(bicepRaw, SAMPLES);
-  int tricepProcessed = processSignal(tricepRaw, SAMPLES);
 
-  bicepState = muscleStatus(bicepProcessed, bicepState, THRESHOLD);
-  tricepState = muscleStatus(tricepProcessed, tricepState, THRESHOLD);
-  int pose = classifySignal(pose, bicepProcessed, tricepProcessed);
+  int THRESHOLD = analogRead(A2) / 10;
 
-  select_pose(pose);
+  //unsigned long starttime = micros();
+
+  // collect and filter the raw bicep data
+  float bicepLP = bicepLowPass.filterIn(analogRead(bicepSensor));
+  int newBicepFiltered = bicepHighPass.filterIn(bicepLP);
+
+  // store old data temporarily and replace it with new data
+  short oldBicepFiltered = bicepFiltered[position % SAMPLES];
+  bicepFiltered[position % SAMPLES] = newBicepFiltered;
+
+  // find the RMS of the filtered data
+  bicep_sum_squares -= oldBicepFiltered * oldBicepFiltered;
+  bicep_sum_squares += newBicepFiltered * newBicepFiltered;
+  int bicepRMS = sqrt(bicep_sum_squares / SAMPLES);
+  // determine the state of the muscle
+  bicepState = muscleStatus(bicepRMS, bicepState, THRESHOLD);
+
+  // collect and filter the raw tricep data
+  float tricepLP = tricepLowPass.filterIn(analogRead(tricepSensor));
+  int newTricepFiltered = tricepHighPass.filterIn(tricepLP);
+
+  // store old data temporarily and replace it with new data
+  short oldTricepFiltered = tricepFiltered[position % SAMPLES];
+  tricepFiltered[position % SAMPLES] = newTricepFiltered;
+
+  // find the RMS of the filtered data
+  tricep_sum_squares -= oldTricepFiltered * oldTricepFiltered;
+  tricep_sum_squares += newTricepFiltered * newTricepFiltered;
+  int tricepRMS = sqrt(tricep_sum_squares / SAMPLES);
+  // determine the state of the muscle
+  tricepState = muscleStatus(tricepRMS, tricepState, THRESHOLD);
+
+  // increment our position in the raw array
+  position++;
+  /*
+  // store the previous pose
+  int oldPose = pose;
+  // determine the new pose
+  pose = classifySignal(oldPose, bicepState, tricepState);
+
+  // actuate if necessary
+  if (pose != oldPose)
+  {
+    select_pose(pose);
+  }
+*/
+  print_to_plotter(bicepRMS, tricepRMS, THRESHOLD);
+  //print_to_plotter(bicepRaw[position % SAMPLES]);
+  //unsigned long finishtime = micros();
+  /*if ((finishtime - starttime) < 1000)
+    {
+      digitalWrite(19, HIGH);
+    }
+    */
 }
 
 /******************************************************************************/
