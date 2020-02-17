@@ -57,8 +57,6 @@ Filter tricepHighPass(high_cutoff_freq, sampling_time, order, IIR::TYPE::HIGHPAS
 // setup function, runs once when device is booted
 void setup()
 {
-  Serial.begin(115200);
-
   init_motor();
   init_debug();
 }

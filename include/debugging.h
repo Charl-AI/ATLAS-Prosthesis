@@ -8,8 +8,8 @@ board differently, we only need to change this file
 extern "C" {
 #endif
 
-#ifndef config_H
-#define config_H
+#ifndef debugging_H
+#define debugging_H
 
 void init_debug(void);
 void print_to_plotter(int bicep, int tricep, int threshold);

@@ -8,6 +8,8 @@ these in the final product
 // use this function in setup to enable debugging LEDs
 void init_debug(void)
 {
+    Serial.begin(115200);
+
     pinMode(19, OUTPUT);
     pinMode(17, OUTPUT);
     pinMode(18, OUTPUT);
