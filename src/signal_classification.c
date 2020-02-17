@@ -15,7 +15,7 @@ classifySignal uses a state transition table to decide which pose to select
 // Schmitt trigger to classify muscle as either active or relaxed
 int muscleStatus(int processedSignal, int muscleState, int upperThreshold)
 {
-    int lowerThreshold = 0.8 * upperThreshold;
+    int lowerThreshold = 0.5 * upperThreshold;
 
     // if the muscle was relaxed
     if (muscleState == 0)
