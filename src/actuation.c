@@ -21,7 +21,7 @@ void init_motor(void)
 // extends the motor connected to that pin
 void extend_finger(int finger)
 {
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 5; i++)
     {
         digitalWrite(finger, HIGH);
         delay(1);
@@ -34,7 +34,7 @@ void extend_finger(int finger)
 // retracts the motor connected to that pin
 void close_finger(int finger)
 {
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 5; i++)
     {
         digitalWrite(finger, HIGH);
         delay(2);
