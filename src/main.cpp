@@ -82,8 +82,10 @@ void loop()
   bicep_sum_squares -= oldBicepFiltered * oldBicepFiltered;
   bicep_sum_squares += newBicepFiltered * newBicepFiltered;
   int bicepRMS = sqrt(bicep_sum_squares / SAMPLES);
-  // determine the state of the muscle
-  bicepState = muscleStatus(bicepRMS, bicepState, THRESHOLD);
+
+  // determine the state of the muscle and store the old one
+  int oldBicepState = bicepState;
+  bicepState = muscleStatus(bicepRMS, oldBicepState, THRESHOLD);
 
   // collect and filter the raw tricep data
   float tricepLP = tricepLowPass.filterIn(analogRead(tricepSensor));
@@ -97,23 +99,22 @@ void loop()
   tricep_sum_squares -= oldTricepFiltered * oldTricepFiltered;
   tricep_sum_squares += newTricepFiltered * newTricepFiltered;
   int tricepRMS = sqrt(tricep_sum_squares / SAMPLES);
-  // determine the state of the muscle
-  tricepState = muscleStatus(tricepRMS, tricepState, THRESHOLD);
+
+  // determine the state of the muscle and store the old one
+  int oldTricepState = tricepState;
+  tricepState = muscleStatus(tricepRMS, oldTricepState, THRESHOLD);
 
   // increment our position in the raw array
   position++;
-  /*
-  // store the previous pose
-  int oldPose = pose;
-  // determine the new pose
-  pose = classifySignal(oldPose, bicepState, tricepState);
 
-  // actuate if necessary
-  if (pose != oldPose)
+  // check if there has been any change in muscle state
+  if ((bicepState != oldBicepState) | (tricepState != oldTricepState))
   {
+    // calculate new pose and actuate
+    pose = classifySignal(pose, bicepState, tricepState);
     select_pose(pose);
   }
-*/
+
   print_to_plotter(bicepRMS, tricepRMS, THRESHOLD);
   //print_to_plotter(bicepRaw[position % SAMPLES]);
   //unsigned long finishtime = micros();
