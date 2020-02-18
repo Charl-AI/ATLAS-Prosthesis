@@ -9,11 +9,12 @@ ATLAS
 //include statements and boilerplate code
 
 #include <Arduino.h>
-#include "config.h"
+#include <ArduinoLowPower.h>
+#include <filters.h>
 
+#include "config.h"
 #include "signal_classification.h"
 #include "actuation.h"
-#include "filters.h"
 #include "debugging.h"
 /******************************************************************************/
 // Define Global variables here
@@ -66,7 +67,7 @@ void setup()
 void loop()
 {
 
-  int THRESHOLD = analogRead(A2) / 10;
+  int THRESHOLD = analogRead(potentiometer) / 10;
 
   //unsigned long starttime = micros();
 
