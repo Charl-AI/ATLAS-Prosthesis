@@ -11,6 +11,8 @@ extern "C" {
 #ifndef config_H
 #define config_H
 
+#define powerButton 9
+
 // Sensors are connected to analogue inputs 0 and 1
 #define bicepSensor A0
 #define tricepSensor A1

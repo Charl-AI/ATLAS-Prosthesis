@@ -16,6 +16,7 @@ ATLAS
 #include "signal_classification.h"
 #include "actuation.h"
 #include "debugging.h"
+#include "power_button.h"
 /******************************************************************************/
 // Define Global variables here
 
@@ -60,6 +61,9 @@ void setup()
 {
   init_motor();
   init_debug();
+
+  // When the button is pressed the device wakes up and performs the routine
+  LowPower.attachInterruptWakeup(powerButton, wakeUpRoutine, CHANGE);
 }
 
 /******************************************************************************/
