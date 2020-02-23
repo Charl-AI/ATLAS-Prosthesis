@@ -13,13 +13,16 @@ long click it will put the device into sleep mode
 
 // function to poll the button to determine if it's been pressed and what type
 // of press
-void checkButtonState(void)
+int checkButtonState(void)
 {
 }
 
 // Routine for when turned on from sleep mode
 void wakeUpRoutine(void)
 {
+    // put relay code here
+
+    // put LED code here
 }
 
 // function to display the battery level on the LEDs
@@ -30,9 +33,23 @@ void displayBatteryLevel(void)
 // Function to turn off relay and put the device into sleep mode
 void putToSleep(void)
 {
+    // put relay code here
+
+    // put LED code here
+
+    LowPower.sleep();
 }
 
 // call this in the main function to link all the above functions together
 void buttonHandler(void)
 {
+    int state = checkButtonState();
+    if (state == 1)
+    {
+        displayBatteryLevel();
+    }
+    if (state == 2)
+    {
+        putToSleep();
+    }
 }
