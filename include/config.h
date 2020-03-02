@@ -11,7 +11,11 @@ extern "C" {
 #ifndef config_H
 #define config_H
 
-#define powerButton 9
+// Power button pin
+#define powerButton 5
+
+// Battery voltage pin
+#define VBATPIN A7
 
 // Sensors are connected to analogue inputs 0 and 1
 #define bicepSensor A0
