@@ -61,9 +61,10 @@ void setup()
 {
   init_motor();
   init_debug();
+  init_UI();
 
   // When the button is pressed the device wakes up and performs the routine
-  LowPower.attachInterruptWakeup(powerButton, wakeUpRoutine, CHANGE);
+  LowPower.attachInterruptWakeup(powerButton, wakeUpRoutine, FALLING);
 }
 
 /******************************************************************************/
@@ -71,6 +72,7 @@ void setup()
 void loop()
 {
 
+  buttonHandler();
   int THRESHOLD = analogRead(potentiometer) / 10;
 
   //unsigned long starttime = micros();

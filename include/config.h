@@ -27,6 +27,16 @@ extern "C" {
 #define index_finger 11
 #define second_finger 12
 
+// LED lights
+#define LED1 1 // red LED for lowest battery level
+#define LED2 0
+#define LED3 22
+#define LED4 23 // green LED for highest battery level
+
+// Relay pins
+#define relayhigh 21
+#define relaylow 20
+
 #ifdef __cplusplus
 }
 #endif

@@ -10,10 +10,11 @@ extern "C" {
 #define power_button_H
 
 void wakeUpRoutine(void);
-void checkButtonState(void);
 void displayBatteryLevel(void);
 void putToSleep(void);
 void buttonHandler(void);
+void turnOffLED(void);
+void init_UI(void);
 
 #ifdef __cplusplus
 }
