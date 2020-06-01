@@ -6,4 +6,4 @@ ATLAS is a novel prosthetic hand using mechanomyographic (MMG) muscle sensing to
 
 This project was completed as a university project by four members and there is plenty of scope for people to adapt and improve our work. The project is documented on this page, however, names and identifying information about the group members have been redacted in some places for privacy.
 
-![alt text](https://github.com/cj1917/ATLAS-Prosthesis/blob/master/Photos%20and%20assets/ATLAS%20LOGO.jpg)
+![alt text](https://github.com/cj1917/ATLAS-Prosthesis/blob/master/Photos%20and%20assets/ATLAS_demonstration.jpg)
